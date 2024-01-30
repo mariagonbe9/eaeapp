@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,6 +23,11 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+Route::get('/migrate', function () {
+    Artisan::call('migrate');
+    return 'migrated successfully';
 });
 
 Route::middleware([
