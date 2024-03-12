@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  eaeapp:
+    build: 
+      args: 
+        user: eaeapp
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    image: eaeapp-image
+    container_name: eaeapp-container_name
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - eaeapp-network
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: '${RDS_DB_NAME}'
+      MYSQL_ROOT_PASSWORD: '${RDS_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_PASSWORD: '${RDS_PASSWORD}'
+      MYSQL_USER: '${RDS_USERNAME}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint.initdb.d
+    networks:
+      - eaeapp-network
+  nginx: 
+    image: nginx:alpine
+    container_name: eaeapp-nginx
+    ports:
+      - 80:80
+    volumes: 
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - eaeapp-network
+networks:
+  eaeapp-network:
+    driver: bridge
+

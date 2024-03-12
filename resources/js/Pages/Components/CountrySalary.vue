@@ -28,7 +28,7 @@ export default defineComponent({
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('');
+                const response = await axios.get('https://4wasju0f2f.execute-api.us-east-1.amazonaws.com/dev/salaries');
                 const data = JSON.parse(response.data.data);
                 const labels = data.map(item => item.employee_residence);
                 const values = data.map(item => item.average_salary);

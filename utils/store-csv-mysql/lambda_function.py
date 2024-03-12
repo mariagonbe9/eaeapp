@@ -1,7 +1,7 @@
 import os
 import csv
 import boto3
-import pymsql
+import pg8000
 from urllib.parse import unquote_plus
 
 s3_client = boto3.client('s3')
@@ -19,8 +19,8 @@ def lambda_handler(event, context):
     file_key = unquote_plus(event['Records'][0]['s3']['object']['key'])
 
     # create connection to the database
-    conn = pymsql.connect(
-        host=db_host, user=db_user, password=db_password, database=db_name)
+    conn = pg8000.connect(
+        host=db_host, user=db_user, password=db_password, ssl_context=True)
     cursor = conn.cursor()
 
     # download the CSV file
